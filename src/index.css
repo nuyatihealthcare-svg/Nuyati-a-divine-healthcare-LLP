@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@300;400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-brand-orange: #d1562e;
+  --color-brand-cream: #f8f6f2;
+  
+  --color-nuyati-green: #354e23;
+  --color-nuyati-cream: #fdf3d0;
+  --color-nuyati-gold: #ffed4d;
+  --color-nuyati-red: #b90000;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-white bg-nuyati-green overflow-x-hidden;
+  }
+}
+
+.serif-xl { 
+  font-family: var(--font-serif); 
+  font-style: italic; 
+  font-size: clamp(6rem, 18vw, 12rem); 
+  line-height: 1; 
+}
+
+.serif-title { 
+  font-family: var(--font-serif); 
+  font-style: italic; 
+  font-size: clamp(3rem, 6vw, 5rem); 
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

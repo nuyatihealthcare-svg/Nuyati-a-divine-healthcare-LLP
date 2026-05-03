@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Camera, Send, X, Star } from 'lucide-react';
 
@@ -41,14 +41,18 @@ export const NuyatiComments: React.FC<NuyatiCommentsProps> = ({ onRatingUpdate }
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Notify parent of initial ratings
-  React.useEffect(() => {
+  // Notify parent of ratings when comments change
+  useEffect(() => {
     if (onRatingUpdate) {
       const total = comments.length;
+      if (total === 0) {
+        onRatingUpdate(0, 0);
+        return;
+      }
       const sum = comments.reduce((acc, curr) => acc + curr.rating, 0);
       onRatingUpdate(sum / total, total);
     }
-  }, []);
+  }, [comments, onRatingUpdate]);
 
   const handleImageUpload = (file: File) => {
     if (file && file.type.startsWith('image/')) {
@@ -80,13 +84,6 @@ export const NuyatiComments: React.FC<NuyatiCommentsProps> = ({ onRatingUpdate }
     const updatedComments = [comment, ...comments];
     setComments(updatedComments);
     
-    // Notify parent
-    if (onRatingUpdate) {
-      const total = updatedComments.length;
-      const sum = updatedComments.reduce((acc, curr) => acc + curr.rating, 0);
-      onRatingUpdate(sum / total, total);
-    }
-
     setNewName('');
     setNewComment('');
     setNewRating(5);

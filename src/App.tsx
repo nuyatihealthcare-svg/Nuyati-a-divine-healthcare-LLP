@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { NuyatiNavbar } from './components/NuyatiNavbar';
 import { FullScreenSection } from './components/FullScreenSection';
 import { NuyatiProduct } from './components/NuyatiProduct';
 import { NuyatiComments } from './components/NuyatiComments';
 import { CursorSoap } from './components/CursorSoap';
-import { Leaf, Instagram, X, Star } from 'lucide-react';
+import { Leaf, Instagram, Facebook, X, Star } from 'lucide-react';
 
 const RevealUp: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => (
   <motion.div
@@ -19,14 +19,38 @@ const RevealUp: React.FC<{ children: React.ReactNode; delay?: number }> = ({ chi
 );
 
 export default function App() {
-  const [cartCount, setCartCount] = React.useState(0);
-  const [totalPrice, setTotalPrice] = React.useState(0);
-  const [isProfileOpen, setIsProfileOpen] = React.useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
-  const [userProfile, setUserProfile] = React.useState<any>(null);
-  const [paymentMethod, setPaymentMethod] = React.useState<'upi' | 'card'>('upi');
-  const [avgRating, setAvgRating] = React.useState(4.8);
-  const [totalReviews, setTotalReviews] = React.useState(108);
+  const [cartCount, setCartCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card'>('upi');
+  const [avgRating, setAvgRating] = useState(4.8);
+  const [totalReviews, setTotalReviews] = useState(108);
+
+  const [shippingDetails, setShippingDetails] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: ''
+  });
+
+  useEffect(() => {
+    if (userProfile) {
+      setShippingDetails({
+        name: userProfile.name || '',
+        email: userProfile.email || '',
+        phone: userProfile.phone || '',
+        address: userProfile.address || '',
+        city: userProfile.city || '',
+        state: userProfile.state || '',
+        pincode: userProfile.pincode || ''
+      });
+    }
+  }, [userProfile]);
 
   const handleRatingUpdate = (avg: number, total: number) => {
     setAvgRating(avg);
@@ -102,12 +126,12 @@ export default function App() {
           setTotalPrice(0);
         },
         prefill: {
-          name: userProfile?.name || "",
-          email: userProfile?.email || "",
-          contact: userProfile?.phone || "",
+          name: shippingDetails.name,
+          email: shippingDetails.email,
+          contact: shippingDetails.phone,
         },
         notes: {
-          address: userProfile?.address || "",
+          address: `${shippingDetails.address}, ${shippingDetails.city}, ${shippingDetails.state} - ${shippingDetails.pincode}`,
         },
         theme: {
           color: "#354e23",
@@ -138,7 +162,7 @@ export default function App() {
 
       <main>
         {/* HERO SECTION */}
-        <FullScreenSection image="https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=2070&auto=format&fit=crop">
+        <FullScreenSection image="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop">
           <div className="pt-24">
             <RevealUp>
               <h1 className="serif-xl text-white">Nuyati</h1>
@@ -160,7 +184,7 @@ export default function App() {
         </FullScreenSection>
 
         {/* PHILOSOPHY SECTION */}
-        <FullScreenSection image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=2070&auto=format&fit=crop">
+        <FullScreenSection image="https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=2070&auto=format&fit=crop">
           <RevealUp>
             <h2 className="serif-title mb-16 md:mb-24">Our Philosophy</h2>
           </RevealUp>
@@ -230,10 +254,10 @@ export default function App() {
         <NuyatiComments onRatingUpdate={handleRatingUpdate} />
 
         {/* FOOTER SECTION */}
-        <FullScreenSection image="https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?q=80&w=2070&auto=format&fit=crop">
-          <div className="py-20 flex flex-col items-center justify-center min-h-[60vh]">
+        <FullScreenSection image="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop">
+          <div className="pt-40 pb-20 flex flex-col items-center justify-center min-h-[60vh]">
             <RevealUp>
-              <h2 className="serif-title mb-12 text-white">Thank you for choosing Nature!</h2>
+              <h2 className="serif-title mb-12 text-white drop-shadow-lg">Thank you for choosing Nature!</h2>
             </RevealUp>
             <RevealUp delay={0.2}>
               <p className="text-xl md:text-3xl opacity-90 mb-20 max-w-3xl mx-auto font-light leading-relaxed italic">
@@ -259,6 +283,20 @@ export default function App() {
                         ))}
                       </div>
                       <p className="text-xs font-bold opacity-80">{avgRating.toFixed(1)} / 5.0 ({totalReviews} Reviews)</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 border-t border-white/10 pt-4">
+                    <span className="text-[10px] uppercase tracking-widest text-nuyati-gold font-black">Spiritual Socials</span>
+                    <div className="flex items-center gap-6 pt-1">
+                      <a href="https://www.instagram.com/nuyati3105/" target="_blank" rel="noopener noreferrer" className="text-white opacity-60 hover:opacity-100 hover:text-nuyati-gold transition-all transform hover:scale-110">
+                        <Instagram size={20} />
+                      </a>
+                      <a href="#" target="_blank" rel="noopener noreferrer" className="text-white opacity-60 hover:opacity-100 hover:text-nuyati-gold transition-all transform hover:scale-110">
+                        <Facebook size={20} />
+                      </a>
+                      <a href="#" target="_blank" rel="noopener noreferrer" className="text-white opacity-60 hover:opacity-100 hover:text-nuyati-gold transition-all transform hover:scale-110">
+                        <X size={20} />
+                      </a>
                     </div>
                   </div>
               </div>
@@ -294,69 +332,126 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white w-full max-w-sm rounded-xl shadow-2xl overflow-hidden text-nuyati-green"
+              className="relative bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden text-nuyati-green max-h-[90vh] flex flex-col"
             >
-              <div className="bg-nuyati-cream p-4 text-center border-b border-nuyati-green/5">
+              <div className="bg-nuyati-cream p-4 text-center border-b border-nuyati-green/5 shrink-0">
                 <div className="w-10 h-10 bg-nuyati-gold rounded-full flex items-center justify-center mx-auto mb-2">
                   <Leaf className="text-nuyati-green" size={20} />
                 </div>
                 <h2 className="serif-title text-xl mb-1 italic">Divine Checkout</h2>
-                <p className="text-[10px] uppercase tracking-widest font-bold opacity-60">Complete your spiritual purchase</p>
+                <p className="text-[10px] uppercase tracking-widest font-bold opacity-60">Shipping & Billing Ritual</p>
               </div>
               
-              <div className="p-5 space-y-4">
-                <div className="space-y-2 bg-nuyati-green/5 p-3 rounded-lg">
+              <div className="p-6 overflow-y-auto space-y-6">
+                <div className="space-y-3 bg-nuyati-green/5 p-4 rounded-lg">
                   <div className="flex justify-between items-center text-xs">
                     <span className="font-medium">Nuyati Glow Bar Cart ({cartCount} {cartCount === 1 ? 'Pack' : 'Packs'})</span>
                     <span className="font-bold">Rs. {totalPrice}</span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
                     <span className="opacity-60">Divine Shipping</span>
-                    <span className="font-black text-nuyati-green tracking-widest">FREE</span>
+                    <span className="font-black text-nuyati-green tracking-widest text-[10px]">FREE</span>
                   </div>
                   <div className="flex justify-between items-center pt-2 border-t border-nuyati-gold/30">
-                    <span className="text-sm font-bold">Total Amount</span>
-                    <span className="text-lg font-black text-red-700">Rs. {totalPrice.toFixed(2)}</span>
+                    <span className="text-sm font-bold uppercase tracking-tighter">Amount to Transfer</span>
+                    <span className="text-xl font-black text-red-700">Rs. {totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-black tracking-widest opacity-40">Choose Payment Method</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button 
-                      onClick={() => setPaymentMethod('upi')}
-                      className={`border-2 p-3 rounded-lg flex flex-col items-center gap-1 transition-all ${
-                        paymentMethod === 'upi' ? 'border-nuyati-green bg-nuyati-green/5' : 'border-transparent bg-gray-50 opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <span className="font-bold text-[10px] uppercase tracking-widest">UPI / QR</span>
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="UPI" className="h-3 object-contain" />
-                    </button>
-                    <button 
-                      onClick={() => setPaymentMethod('card')}
-                      className={`border-2 p-3 rounded-lg flex flex-col items-center gap-1 transition-all ${
-                        paymentMethod === 'card' ? 'border-nuyati-green bg-nuyati-green/5' : 'border-transparent bg-gray-50 opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <span className="font-bold text-[10px] uppercase tracking-widest">Card / Net</span>
-                      <div className="flex gap-1 h-3 items-center">
-                        <div className="w-3 h-1.5 bg-blue-600 rounded-px" />
-                        <div className="w-3 h-1.5 bg-red-600 rounded-px" />
-                      </div>
-                    </button>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">Full Divine Name</label>
+                      <input 
+                        type="text" 
+                        value={shippingDetails.name}
+                        onChange={(e) => setShippingDetails(prev => ({ ...prev, name: e.target.value }))}
+                        className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none"
+                        placeholder="Aditi Sharma"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">Email ID</label>
+                      <input 
+                        type="email" 
+                        value={shippingDetails.email}
+                        onChange={(e) => setShippingDetails(prev => ({ ...prev, email: e.target.value }))}
+                        className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none"
+                        placeholder="sharma.aditi@nuyati.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">Phone Number</label>
+                      <input 
+                        type="tel" 
+                        value={shippingDetails.phone}
+                        onChange={(e) => setShippingDetails(prev => ({ ...prev, phone: e.target.value }))}
+                        className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none"
+                        placeholder="+91 98XXX XXXXX"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">Pincode</label>
+                      <input 
+                        type="text" 
+                        value={shippingDetails.pincode}
+                        onChange={(e) => setShippingDetails(prev => ({ ...prev, pincode: e.target.value }))}
+                        className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none"
+                        placeholder="4000XX"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">Sacred Delivery Address</label>
+                    <textarea 
+                      value={shippingDetails.address}
+                      onChange={(e) => setShippingDetails(prev => ({ ...prev, address: e.target.value }))}
+                      rows={2}
+                      className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none resize-none"
+                      placeholder="Apartment, Street, Landmark..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">City</label>
+                      <input 
+                        type="text" 
+                        value={shippingDetails.city}
+                        onChange={(e) => setShippingDetails(prev => ({ ...prev, city: e.target.value }))}
+                        className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none"
+                        placeholder="Mumbai"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-black tracking-widest opacity-40 ml-1">State</label>
+                      <input 
+                        type="text" 
+                        value={shippingDetails.state}
+                        onChange={(e) => setShippingDetails(prev => ({ ...prev, state: e.target.value }))}
+                        className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-nuyati-gold outline-none"
+                        placeholder="Maharashtra"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-4 pb-2">
                   <button 
                     onClick={handlePayment}
-                    className="w-full bg-[#ffff00] text-black py-4 rounded-lg font-black uppercase tracking-[0.2em] shadow-xl hover:scale-[1.01] transition-all text-sm"
+                    disabled={!shippingDetails.name || !shippingDetails.address || !shippingDetails.phone}
+                    className="w-full bg-nuyati-gold text-nuyati-green py-4 rounded-lg font-black uppercase tracking-[0.2em] shadow-xl hover:scale-[1.01] active:scale-[0.98] transition-all text-sm disabled:opacity-30 disabled:hover:scale-100"
                   >
-                    Pay & Complete Order
+                    Proceed to Divine Payment
                   </button>
+                  <p className="text-[9px] text-center mt-3 opacity-40 font-medium">You will be redirected to our secure payment partner</p>
                   <button 
                     onClick={() => setIsCheckoutOpen(false)}
-                    className="w-full text-[9px] uppercase font-bold tracking-widest opacity-40 hover:opacity-80 transition-opacity mt-3"
+                    className="w-full text-[9px] uppercase font-bold tracking-widest opacity-40 hover:opacity-100 transition-opacity mt-4"
                   >
                     Return to Ritual
                   </button>

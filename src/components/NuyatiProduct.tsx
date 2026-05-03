@@ -36,12 +36,12 @@ export const NuyatiProduct: React.FC<NuyatiProductProps> = ({
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
-          className="flex items-center justify-center p-8 bg-white border border-nuyati-green/10 rounded group cursor-zoom-in"
+          className="flex items-center justify-center p-8 bg-white border border-nuyati-gold/20 rounded group cursor-zoom-in shadow-2xl shadow-nuyati-gold/10"
         >
           <img 
             src="https://images.unsplash.com/photo-1605264964528-06403738d6dc?q=80&w=1974&auto=format&fit=crop" 
             alt="Alphonso Mango Soap" 
-            className="max-h-[500px] object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700"
+            className="max-h-[500px] object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-700"
             referrerPolicy="no-referrer"
           />
         </motion.div>
